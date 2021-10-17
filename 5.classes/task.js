@@ -93,7 +93,7 @@ class Library {
       let obj = this.books[i];
       for(let prop in obj) {
         if(bookName === obj[prop]) {
-          this.books.splice(i);
+          this.books.splice(i, 1);
           return obj;     
         }
       }
