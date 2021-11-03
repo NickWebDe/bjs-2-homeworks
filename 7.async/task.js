@@ -5,21 +5,23 @@ class AlarmClock {
     this.timerId = timerId;
   }
 
+
   addClock(time, callBack, id) {
     if (id === undefined) {
       throw new Error('error text');
-    } this.alarmCollection.forEach((item) => {
-      if(item === id) {
-        console.error('Такой Id уже есть')
-             }
-    })
+    } else if (this.alarmCollection.some((element) => element.id === id) != true) {
     this.alarmCollection.push(
       {
         id: id,
         time: time,
       callBack: callBack,
     })
-  }
+    return;
+    }  
+    console.error('Такой звонок уже есть')
+   }
+
+
 
   removeClock(id) {
     let checkArr = this.alarmCollection.length;
@@ -28,33 +30,40 @@ class AlarmClock {
   }
 
   getCurrentFormattedTime() {
-    let currentDate = String(new Date);
-    return currentDate.substr(16,5);
+    return new Date().toLocaleTimeString('ru-Ru', {
+  hour12: false,
+  hour: "2-digit",
+  minute: "2-digit",
+});
   }
 
-  start(call) {
- 
-  }
+  start() {
+    if(this.timerId === null) {
+    let checkClock = (time) => 
+      this.alarmCollection.forEach((element)=> {
+        if(element.time === '16:25') {
+          element.callBack();
+        }
+      })      
+    setInterval(checkClock, 1000, this.getCurrentFormattedTime())
+   }
+  };
 
   stop() {
-    if(this.timerId !== undefined) {
-      this.id = null;
+    if(this.timerId !== null) {
+      this.timerId = null;
+      return;
     }
   }
 
-  
   printAlarms() {
-    this.alarmCollection.forEach((value) => {
-      for (let key in value) {
-        if(key === 'id' || key === 'time') {
-          console.log(key + ' ' + value[key])
-        }
-      } 
-      })
+    console.log(`Печать всех будильников в колличестве: ${this.alarmCollection.length}`)
+    this.alarmCollection.forEach((value, idx) => 
+    console.log(`Будильник номер №${idx + 1} заведен на ${value.time}`));
   }
 
   clearAlarms() {
-    clearInterval(this.timerId);
-    this.alarmCollection.splice(0, this.alarmCollection.length);
+    this.stop();
+    this.alarmCollection = [];
   }
 }
