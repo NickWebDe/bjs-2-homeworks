@@ -39,21 +39,22 @@ class AlarmClock {
 
   start() {
     if(this.timerId === null) {
-    let checkClock = (time) => 
+    let checkClock = () => 
       this.alarmCollection.forEach((element)=> {
-        if(element.time === '16:25') {
+        if(element.time === this.getCurrentFormattedTime()) {
           element.callBack();
         }
       })      
-    setInterval(checkClock, 1000, this.getCurrentFormattedTime())
+   this.timerId = setInterval(checkClock, 1000, this.getCurrentFormattedTime())
    }
   };
 
   stop() {
     if(this.timerId !== null) {
+      clearTimeout(this.timerId);
       this.timerId = null;
       return;
-    }
+    }    
   }
 
   printAlarms() {
