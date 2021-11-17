@@ -8,17 +8,29 @@ function cachingDecoratorNew (func) {
     const hash = args.join(',')
     const idx = cache.findIndex((element) => element.hash === hash);
     if(idx != idxFlag) {
-      console.log(`Из кэша: ${cache[idx].value}`);
-    } else {
-      let result = func(...args);
-      cache.push({ hash: hash, value : result});
-      console.log(`Вычисляем: ${result}`);
+      return `Из кэша: ${cache[idx].result}`;
+    } 
+    let result = func(...args);
+      cache.push({ hash, result});
       if(cache.length > maxCache) {
         cache.shift();
       }
-    }
-
+      return `Вычисляем: ${result}`;
   }
   return wrapper;
 }
 
+
+function debounceDecoratorNew(f, ms) {
+ f(); //Сразу выполняю переданную функцию
+ let checkFlag = true; // Взвожу флаг
+ return function (...args) {
+    if(checkFlag) { // Проверяю флаг
+    setTimeout(() => {
+    checkFlag = false; // Снимаю флаг
+    f.apply(this, args); //
+    console.log(checkFlag)
+    }, ms);
+   };
+  }
+ }
