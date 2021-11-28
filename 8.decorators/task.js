@@ -21,16 +21,14 @@ function cachingDecoratorNew (func) {
 }
 
 
+
 function debounceDecoratorNew(f, ms) {
- f(); //Сразу выполняю переданную функцию
- let checkFlag = true; // Взвожу флаг
+ let timeout;
  return function (...args) {
-    if(checkFlag) { // Проверяю флаг
-    setTimeout(() => {
-    checkFlag = false; // Снимаю флаг
-    f.apply(this, args); //
-    console.log(checkFlag)
-    }, ms);
-   };
-  }
- }
+ clearTimeout(timeout);
+ timeout = setTimeout(() => {
+ f.apply(this, args);
+ }, ms);
+ };
+}
+
